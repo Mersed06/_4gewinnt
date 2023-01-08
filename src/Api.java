@@ -32,7 +32,6 @@ public class Api {
         int endIndex = responseString.indexOf('}', rateIndex);
         String rate = responseString.substring(rateIndex, endIndex);
 
-    return rate;
+        return rate;
     }
 }
-

@@ -1,32 +1,56 @@
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        double amount;
-
+        double amount = 0;
         double convertedAmount;
         String firstCurrency;
         String secondCurrency;
         Scanner sc = new Scanner(System.in);
-
-
-        System.out.println("Welcome");
-        System.out.println("Here is the list of available currencies that can be converted: ");
-        System.out.println(ConversionRate.currencyName());
-        System.out.println("Euro (EUR)\n" + "US Dollar (USD)\n" + "Australian Dollar (AUD)\n");
-        System.out.println("Choose first currency");
+        System.out.println("Welcome to our currency converter");
+        System.out.println(Converter.getCurrencyList());
+        System.out.println("Please choose the first currency: ");
         firstCurrency = sc.next();
-        System.out.println("How much bro?");
-        amount = sc.nextDouble();
-        System.out.println("Choose second currency");
+
+        if (Converter.checkCurrency(firstCurrency) == false) {
+            do {
+                System.out.println("Wrong currency used... Choose another one...");
+                firstCurrency = sc.next();
+            } while (Converter.checkCurrency(firstCurrency) == false);
+        }
+
+
+        System.out.println("Please choose the second currency: ");
         secondCurrency = sc.next();
 
-        convertedAmount = Double.parseDouble(ConversionRate.ConversionRate(String.valueOf(amount), firstCurrency, secondCurrency));
-        System.out.println(convertedAmount);
+
+        if (secondCurrency.equalsIgnoreCase(firstCurrency) || Converter.checkCurrency(secondCurrency) == false) {
+            do {
+                System.out.println("Choose another one...");
+                secondCurrency = sc.next();
+            } while (secondCurrency.equalsIgnoreCase(firstCurrency) || Converter.checkCurrency(secondCurrency) == false);
+        }
+
+        do {
+
+            try {
+                System.out.println("How much money do you want to exchange?");
+                amount = sc.nextDouble();
+            } catch (InputMismatchException ex) {
+                System.out.println("You have to enter a valid number...");
+            }
+            sc.nextLine();
+
+        } while (amount == 0);
+
+
+        convertedAmount = Double.parseDouble(Converter.ConversionRate(String.valueOf(amount), firstCurrency, secondCurrency));
+        System.out.println(String.format("%,.2f", amount) + " " + Converter.getCurrencyNameLong(firstCurrency) + " (" + Converter.getCurrencyNameShort(firstCurrency) + ")" + " equals to " + String.format("%,.2f", convertedAmount) + " " + Converter.getCurrencyNameLong(secondCurrency) + " (" + Converter.getCurrencyNameShort(secondCurrency) + ")" + ".");
+
 
     }
 }
 
-    

@@ -1,4 +1,4 @@
-# Projektarbeit Gruppe 4 CSDC25
+# Project Group 4 CSDC25
 
 * Team: 4gewinnt
 

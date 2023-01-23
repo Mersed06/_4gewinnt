@@ -11,12 +11,11 @@ import java.util.ArrayList;
 public class Converter {
 
 
-    public static String ConversionRate(String amount, String inputCurrency, String outputCurrency) throws IOException {
+    //Takes both currencies and the amount as input and returns the exchanged amount
+    public static String Convert(String amount, String inputCurrency, String outputCurrency) throws IOException {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         // Send a request to the Frankfurter API to get the exchange rate
         String urlString = "https://api.frankfurter.app/latest?amount=" + amount + "&from=" + inputCurrency + "&to=" + outputCurrency;
-
 
         URL url = new URL(urlString);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -35,12 +34,14 @@ public class Converter {
         int endIndex = responseString.indexOf('}', rateIndex);
         String rate = responseString.substring(rateIndex, endIndex);
 
+        //Returns the exchanged amount
         return rate;
     }
 
 
+    //Makes an API request to get the names of all available currencies
     public static String apiRequestGetCurrencies() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
         // Send a request to the Frankfurter API to get the exchange rate
         String urlString = "https://api.frankfurter.app/currencies";
         URL url = new URL(urlString);
@@ -59,25 +60,52 @@ public class Converter {
 
         // Parse the exchange rate from the response
         String responseString = response.toString();
+
+        //Retuns the String with the currencies
         return responseString;
     }
 
-    //Makes API Request to get Currencies and returns it as an ArrayList
+
+    //Makes API Request to get Currencies and returns it as an ArrayList after removing unwanted characters (short and long names)
     public static ArrayList<String> getCurrencyArrayList() throws IOException {
-        ArrayList<String> currencyArrayList = Converter.makeArrayList(Converter.apiRequestGetCurrencies());
-        return currencyArrayList;
-    }
-
-
-    public static ArrayList<String> getShortNameOfCurrency() throws IOException {
+        String responseString = apiRequestGetCurrencies();
 
         ArrayList<String> arrayList = new ArrayList<>();
 
-        ArrayList<String> array = Converter.makeArrayList(Converter.apiRequestGetCurrencies());
+        //Split the String by ","
+        String[] arrayResponseString = responseString.split(",");
 
-        for (int i = 0; i < array.size(); i++) {
-            arrayList.add(i, array.get(i));
+        //Make new ArrayList after split
+        String newString = "";
+        for (int i = 0; i < arrayResponseString.length; i++) {
+            newString = newString + arrayResponseString[i];
         }
+
+        //String split by ""
+        String[] newArrString = newString.split("\"");
+
+
+        //Fill ArrayList with Array
+        for (int i = 0; i < newArrString.length; i++) {
+            arrayList.add(newArrString[i]);
+        }
+
+        //Remove unwanted characters
+        for (int i = 0; i < arrayList.size(); i++) {
+
+            if (arrayList.get(i).contains(":") || arrayList.get(i).contains("")) {
+                arrayList.remove(i);
+            }
+        }
+
+        return arrayList;
+    }
+
+
+    //Returns ArrayList with short names of the currencies
+    public static ArrayList<String> getCurrencyListShortName() throws IOException {
+
+        ArrayList<String> arrayList = Converter.getCurrencyArrayList();
 
         for (int i = 1; i <= arrayList.size(); i++) {
             arrayList.remove(i);
@@ -87,12 +115,10 @@ public class Converter {
 
     }
 
-    //Gets ArrayList with currencies and deletes the short names
-    public static ArrayList<String> getCurrencyListLongName() throws IOException { //Returns currency name
-
+    //Returns ArrayList with long names of the currencies
+    public static ArrayList<String> getCurrencyListLongName() throws IOException {
 
         ArrayList<String> arrayList = Converter.getCurrencyArrayList();
-
 
         for (int i = 0; i < arrayList.size(); i++) {
             arrayList.remove(i);
@@ -102,51 +128,37 @@ public class Converter {
 
     }
 
-    //Gets ArrayList with currencies and deletes the long names (Not used in program)
-   /* public static ArrayList<String> getCurrencyListShortName() throws IOException { //Returns currency abbreviation
 
-
-        ArrayList<String> arrayList = Converter.getCurrencyArrayList();
-
-
-        for (int i = 1; i < arrayList.size(); i++) {
-            arrayList.remove(i);
-        }
-
-        return arrayList;
-
-    }*/
-
-
-
-    public static String getShortNameOfCurrency(String currency) throws IOException { //Takes a currency as input and retuns short name
-        String currencyToBeChecked = currency;
-        String currencyToBeReturned = "";
+    //Takes a currency as input and retuns the short name
+    public static String getShortNameOfCurrency(String currency) throws IOException {
+        String returnCurrency = "";
         ArrayList<String> currencyArrayList = Converter.getCurrencyArrayList();
 
         for (int i = 0; i < currencyArrayList.size(); i++) {
-            if (currencyToBeChecked.toUpperCase().equals(currencyArrayList.get(i).toUpperCase())) {
-                currencyToBeReturned = currencyArrayList.get(i - 1);
+            if (currency.equalsIgnoreCase(currencyArrayList.get(i))) {
+                returnCurrency = currencyArrayList.get(i - 1);
             }
         }
-        return currencyToBeReturned;
+        return returnCurrency;
 
     }
 
-    public static String getLongNameOfCurrency(String currency) throws IOException { //Takes a currency as input and retuns long name
-        String currencyToBeChecked = currency;
-        String currencyToBeReturned = "";
+    //Takes a currency as input and retuns the long name
+    public static String getLongNameOfCurrency(String currency) throws IOException {
+
+        String returnCurrency = "";
         ArrayList<String> currencyArrayList = Converter.getCurrencyArrayList();
 
         for (int i = 0; i < currencyArrayList.size(); i++) {
-            if (currencyToBeChecked.toUpperCase().equals(currencyArrayList.get(i).toUpperCase())) {
-                currencyToBeReturned = currencyArrayList.get(i+1);
+            if (currency.equalsIgnoreCase(currencyArrayList.get(i))) {
+                returnCurrency = currencyArrayList.get(i+1);
             }
         }
-        return currencyToBeReturned;
+        return returnCurrency;
 
     }
 
+    //Checks if the currency is in the list and returns true if it is and false if it is not
     public static boolean checkIfCurrencyIsInList(String currency) throws IOException {
         ArrayList<String> currencyArrayList = Converter.getCurrencyArrayList();
         for (int i = 0; i < currencyArrayList.size(); i++) {
@@ -160,52 +172,6 @@ public class Converter {
         }
         return false;
 
-    }
-
-
-
-
-    public static ArrayList<String> makeArrayList(String responseString) {
-        ArrayList<String> arrayList = new ArrayList<>();
-        ArrayList<String> arrayListShortNames = new ArrayList<>();
-
-
-        String[] arrOfString = responseString.split(",");
-
-
-        //Neuen Array nach Split erstellen
-        String newString = "";
-        for (int i = 0; i < arrOfString.length; i++) {
-            newString = newString + arrOfString[i];
-        }
-
-        //String split by :
-        String[] newArrString = newString.split(":");
-
-
-        //String split by ""
-        String[] newArrString2 = newString.split("\"");
-
-
-        //ArrayList nach Split in ArrayList füllen
-        for (int i = 0; i < newArrString2.length; i++) {
-            arrayList.add(newArrString2[i]);
-        }
-
-        //ArrayList einträge entfernen, die man nicht braucht
-        for (int i = 0; i < arrayList.size(); i++) {
-
-            if (arrayList.get(i).contains(":") || arrayList.get(i).contains("")) {
-                arrayList.remove(i);
-            }
-        }
-
-        //2. Array List mit Werten der ersten befüllen
-        for (int i = 0; i < arrayList.size(); i++) {
-            arrayListShortNames.add(i, arrayList.get(i));
-        }
-
-        return arrayList;
     }
 
 

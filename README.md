@@ -9,8 +9,7 @@
 - Mathias Kerndl
 
 * Project:
-- currency converter
-- Console application and GUI
+- currency converter (console application and GUI)
 
 * How it works:
 - console application:

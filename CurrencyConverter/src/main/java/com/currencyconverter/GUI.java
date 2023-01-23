@@ -17,7 +17,6 @@ public class GUI extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
 
 

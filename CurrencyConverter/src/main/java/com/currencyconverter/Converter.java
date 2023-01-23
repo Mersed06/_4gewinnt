@@ -129,7 +129,7 @@ public class Converter {
     }
 
 
-    //Takes a currency as input and retuns the short name
+    //Takes a currency as input and returns the short name
     public static String getShortNameOfCurrency(String currency) throws IOException {
         String returnCurrency = "";
         ArrayList<String> currencyArrayList = Converter.getCurrencyArrayList();
@@ -143,7 +143,7 @@ public class Converter {
 
     }
 
-    //Takes a currency as input and retuns the long name
+    //Takes a currency as input and returns the long name
     public static String getLongNameOfCurrency(String currency) throws IOException {
 
         String returnCurrency = "";

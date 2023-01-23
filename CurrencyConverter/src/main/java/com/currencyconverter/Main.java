@@ -12,18 +12,23 @@ public class Main {
         double convertedAmount;
         String firstCurrency;
         String secondCurrency;
+
+
         ArrayList<String> currencies = Converter.getCurrencyListLongName(); //ArrayList for long name currencies
         ArrayList<String> currenciesShortName = Converter.getCurrencyListShortName(); //ArrayList for short name currencies
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Short name method test" + Converter.getCurrencyArrayList());
 
-        System.out.println("Welcome to our currency converter");
+        System.out.println("Welcome to our currency converter :)");
+        System.out.println("");
         System.out.println("Available currencies: ");
+        System.out.println("");
         for (int i = 0; i < currencies.size(); i++) {
             System.out.println(currencies.get(i) + " (" + currenciesShortName.get(i) + ")"); //Print all currencies
         }
-        System.out.println("Please use the short name of the currencies.");
+        System.out.println("");
+        System.out.println("Please use the short name of the currencies!");
+        System.out.println("");
         System.out.println("Please choose the first currency: ");
         firstCurrency = sc.next();
 
@@ -55,7 +60,7 @@ public class Main {
                 System.out.println("How much?");
                 amount = sc.nextDouble();
             } catch (InputMismatchException ex) { //If the input is not a number
-                System.out.println("You have to enter a number...");
+                System.out.println("You have to enter a valid number...");
             }
             sc.nextLine();
 
